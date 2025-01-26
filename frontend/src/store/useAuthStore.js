@@ -93,18 +93,25 @@
                     userId: authUser._id
                 }
             });
-            socket.connect();
+            
+            socket.on("connect", () => {
+                console.log("Socket connected:", socket.id);
+            });
 
             set({socket: socket});
 
             socket.on("getOnlineUsers", (userIds) =>{
                 set({onlineUsers: userIds});
-            })
+            });
+            socket.on("disconnect", () => {
+                console.log("Socket disconnected");
+            });
         },
 
         disconnectSocket : () =>{
             if(get().socket?.connected){
                 get().socket.disconnect();
+                set({ socket: null });
             }
         }
         
